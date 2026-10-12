@@ -31,3 +31,12 @@ snippets, SQL queries, or text notes without adding them to any specific project
 
 I will try to be able to spawn an instance of a window.
 
+12/10
+
+glfwDestroyWindow(window); is used when you want to quit program. save for later
+
+what i did:
+got window to work, required me to reorder some of the code to properly name window and instanciate it
+added if !window for if it doesnt open 
+
+added error callback
