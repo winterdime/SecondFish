@@ -10,7 +10,9 @@ find_package(OpenGL REQUIRED)
 add_library(glad 3rdparty/glad/src/glad.c)
 target_include_directories(glad PUBLIC 3rdparty/glad/include)
 
-add_executable(SecondFish main.cpp)
+add_executable(SecondFish main.cpp
+        Player.cpp
+        Player.h)
 target_link_libraries(SecondFish PRIVATE
         glfw
         glad
