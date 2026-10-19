@@ -44,3 +44,10 @@ added error callback
 16/10
 
 not really sure what to do now, will try to find documentation on 2d games using OPENGl
+
+19/10
+
+added inputs, window background etc. currently reading learnopengl documentationa nd using ai for explanations. really
+triying to emphasise leanring here instead of blindly pasting. Lowered scope of game to be a fish eating game not a fishing 
+game. just to get more hands on experience.
+
