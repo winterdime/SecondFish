@@ -40,3 +40,7 @@ got window to work, required me to reorder some of the code to properly name win
 added if !window for if it doesnt open 
 
 added error callback
+
+16/10
+
+not really sure what to do now, will try to find documentation on 2d games using OPENGl

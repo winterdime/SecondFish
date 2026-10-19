@@ -60,6 +60,10 @@ int main() {
     glfwMakeContextCurrent(window); //creating the opengl instance and linking it to our GLFW window
     gladLoadGL(glfwGetProcAddress); //connects glad to glfw
 
+    glViewport(0,0,640,480); //tells opengl our boundaries for the program, first two bottom left last two TR
+    //you could implement resizing gl window via learnopengl documentation, i decided not to.
+
+
     double time = glfwGetTime();
     std::cout << "\n" << time << "\n";
 
