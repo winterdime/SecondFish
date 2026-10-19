@@ -7,20 +7,29 @@
 
 // including relevant libraries/thingies idk the terminology.
 
-
+// ---------------------------------------------Function for error calling -----------------------------------
 static void error_callback(int error, const char* description)
 {
     fprintf(stderr, "Error: %s\n", description);
 } //from documentation, a function that allows errors to be echoed to me, needs declaring before GLFW init
 
+//fish coordinates
+float fishX = 0.0;
+float fishY = 0.0;
+//keys set to not pressed initially. Not used at the moment
+bool running = true;
+bool wpressed = false;
+bool spressed = false;
+bool apressed = false;
+bool dpressed = false;
+
+//global for now... maybe later div into classes. for now (and to not lose my mind and quit) ill do it global;.
 
 
-
-
-
-
-
+//-------------------------------------------------main game function ---------------------------------------
 int main() {
+
+
     std::cout << "main{} started"; //lowk just keeping this for error checking
     glfwInit();  // this neeeds to be first.
 
@@ -30,6 +39,7 @@ int main() {
         return -1;
     }
 
+    //initialisation stuff
     GLFWmonitor* monitor = glfwGetPrimaryMonitor(); //setting basic settings, not sure if this is nessessary.
     const GLFWvidmode* mode = glfwGetVideoMode(monitor);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -39,34 +49,95 @@ int main() {
     glfwWindowHint(GLFW_RESIZABLE, GL_TRUE);
     //hints like these are to tell GLFW config of the window,
     glfwSetErrorCallback(error_callback); //telling glfw where to send errorcallbacks. function is for formatting.
-    GLFWwindow* window=glfwCreateWindow(640,480,"SecondFish",NULL,NULL);
-        glfwMakeContextCurrent(window);
-        //whats being done here is a a function (glfwcreatewindow()) is used to create a window oject called GLFW window
-        //for some reason, it must be called GLFWwindow. im not sure why.
-        //actually i know why now: its because GLFWwindow is not the varaible name, its like a function that is used to
-        //communicate with GLFW, variables called window.
-        //
+    GLFWwindow* window=glfwCreateWindow(640,480,"SecondFish",nullptr, nullptr);
+    glfwMakeContextCurrent(window);
+    //whats being done here is a a function (glfwcreatewindow()) is used to create a window oject called GLFW window
+    //for some reason, it must be called GLFWwindow. im not sure why.
+    //actually i know why now: its because GLFWwindow is not the varaible name, its like a function that is used to
+    //communicate with GLFW, variables called window.
+    //
 
+    // if window doesnt create, terminate the program.
     if (!window) {
         std::cout << "Failed to create GLFW window" << std::endl;
         glfwTerminate();
         return -1; //exit code -1 if window didnt create.
     }
 
-    while (!glfwWindowShouldClose(window)) //if flag of glfwWindowShouldClose is untrue,
-                                            // (should be open) in GLFW3 close button or clsoing window sets  this to tr
-        glfwPollEvents(); //processes any input and returns it immidiately.
-
+    //open gl api: creation
     glfwMakeContextCurrent(window); //creating the opengl instance and linking it to our GLFW window
     gladLoadGL(glfwGetProcAddress); //connects glad to glfw
-
     glViewport(0,0,640,480); //tells opengl our boundaries for the program, first two bottom left last two TR
     //you could implement resizing gl window via learnopengl documentation, i decided not to.
 
-
+    // variable time tracks time since program initalised.
     double time = glfwGetTime();
-    std::cout << "\n" << time << "\n";
 
 
-    return 0; //if all is good, process finishes with exit code 0
+    //prototying (telling it it exists) the void keycallback function ( which is decalred i the other section)
+    void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods); //prototype forward declaration so that main knows hat keycallback is
+
+    //GLFW sets key callback to our new keycallback function, so it will tell you when a key is pressed
+    glfwSetKeyCallback(window,key_callback);
+
+
+    while (!glfwWindowShouldClose(window)) //if flag of glfwWindowShouldClose is untrue, /MAIN GAME LOOP!!!!
+    {
+
+    // OPENGL.
+        glClearColor(0.2f, 0.3f, 0.6f, 1.0f); //specifiying bit /  colors for GLCCOLOR (BLUE)
+        glClear(GL_COLOR_BUFFER_BIT); //glClear is a function that passes bits that you previously set BACKGROUND
+
+        
+
+
+
+
+
+
+        // input sensing and buffer swapping.
+        glfwPollEvents(); //processes any input and returns it immidiately.
+        glfwSwapBuffers(window); // not sure what this does., documentation says that two buffers exist, one for display one for rednering, and this swaps them.
     }
+
+
+    //end of main function
+    std::cout << "\n" << time << "\n";
+    return 0; //if all is good, process finishes with exit code 0
+
+    }
+
+// -------------------------------------------------other / helper functions -------------------------------------
+
+void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
+{
+    if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
+    {
+        glfwSetWindowShouldClose(window, GLFW_TRUE);
+
+    }
+
+    if (key == GLFW_KEY_W && action == GLFW_PRESS)
+    {
+        std::cout << "W" << std::endl;
+        wpressed = true;
+    }
+
+    if (key == GLFW_KEY_S && action == GLFW_PRESS)
+    {
+        std::cout << "S" << std::endl;
+        spressed = true;
+    }
+
+    if (key == GLFW_KEY_E && action == GLFW_PRESS) {
+        std::cout << "A" << std::endl;
+        apressed = true;
+    }
+
+    if (key == GLFW_KEY_D && action == GLFW_PRESS)
+    {
+        std::cout << "D" << std::endl;
+        dpressed = true;
+
+    }
+}
