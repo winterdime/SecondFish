@@ -13,6 +13,8 @@ static void error_callback(int error, const char* description)
     fprintf(stderr, "Error: %s\n", description);
 } //from documentation, a function that allows errors to be echoed to me, needs declaring before GLFW init
 
+
+
 //fish coordinates
 float fishX = 0.0;
 float fishY = 0.0;
@@ -23,7 +25,34 @@ bool spressed = false;
 bool apressed = false;
 bool dpressed = false;
 
+// object coordinates,, for now before main, these hold coordinates for our first object.
+float vertices []={
+    0.5,0.5,0,
+    0.5,-0.5,0,
+    -0.5,-0.5,0
+}; //  a VBO (vertex bugger object) is used in OPENGL to send coordinates to the GPU all at once. VBOS can store
+//loads of vertices in GPU memory which makes it really fast
+//
 //global for now... maybe later div into classes. for now (and to not lose my mind and quit) ill do it global;.
+
+/*
+unsigned int VBO;
+
+glGenBuffers(1, &VBO);
+glBindBuffer(GL_ARRAY_BUFFER, VBO);
+glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+*/ //interestingly,. this cant be defined outside of a function....moved to main.
+
+//vertext shaders, for now before main,  should ideally be split into its own GLSL File.
+const char* vertexshadersource = R"(
+#version 330 core
+layout (location = 0) in vec3 position;
+void main()
+{
+gl_Position = vec4(position.x, position.y, position.z, 1.0);
+}
+)";
+ // this is funky, im doingit all in string in main.cpp but could be its own glsl file, essentially  
 
 
 //-------------------------------------------------main game function ---------------------------------------
@@ -81,6 +110,32 @@ int main() {
     glfwSetKeyCallback(window,key_callback);
 
 
+    //shader stuff  - prototyping VBO and VAO, im not sure ill be using VAO, but VBO is  the buffer (carrier) of my vertices to the gpu
+    unsigned int VBO;
+    unsigned int VAO;
+
+    //
+    glGenBuffers(1, &VBO);
+    glBindBuffer(GL_ARRAY_BUFFER, VBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+
+    unsigned int vertexshader;
+    vertexshader = glCreateShader(GL_VERTEX_SHADER);
+    glShaderSource(vertexshader, 1, &vertexshadersource, NULL);
+    glCompileShader(vertexshader);
+
+
+    int  success;
+    char infoLog[512];
+    glGetShaderiv(vertexshader, GL_COMPILE_STATUS, &success);
+
+
+    if(!success)
+    {
+        glGetShaderInfoLog(vertexshader, 512, NULL, infoLog);
+        std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << infoLog << std::endl;
+    }
+
     while (!glfwWindowShouldClose(window)) //if flag of glfwWindowShouldClose is untrue, /MAIN GAME LOOP!!!!
     {
 
@@ -88,7 +143,7 @@ int main() {
         glClearColor(0.2f, 0.3f, 0.6f, 1.0f); //specifiying bit /  colors for GLCCOLOR (BLUE)
         glClear(GL_COLOR_BUFFER_BIT); //glClear is a function that passes bits that you previously set BACKGROUND
 
-        
+
 
 
 
